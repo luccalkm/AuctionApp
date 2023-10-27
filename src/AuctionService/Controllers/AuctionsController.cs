@@ -102,6 +102,9 @@ public class AuctionsController : ControllerBase
         auction.Item.Year = updateAuctionDto.Year ?? auction.Item.Year;
         auction.Item.Mileage = updateAuctionDto.Mileage ?? auction.Item.Mileage;
 
+        // Publishing new auction to event bus under AuctionUpdated - known by other services connected to bus
+        await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
+
         var result = await _context.SaveChangesAsync() > 0;
 
         if (!result) return BadRequest("Problem saving changes");
@@ -119,6 +122,9 @@ public class AuctionsController : ControllerBase
         // TODO: check seller == username
 
         _context.Auctions.Remove(auction);
+
+        // Publishing new auction to event bus under AuctionDeleted - known by other services connected to bus
+        await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
 
         var result = await _context.SaveChangesAsync() > 0;
 
