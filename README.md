@@ -2,7 +2,7 @@
 
 > Aplicação de leilão de carros
 
-Este projeto está atualmente em fase de desenvolvimento, e sua concepção está centrada na criação de um sistema baseado na ***arquitetura de microsserviços.***
+Este projeto está atualmente em fase de desenvolvimento, e seu foco é a criação de um sistema baseado na ***arquitetura de microsserviços.***
 
 ### Arquitetura de microsserviços
 Consiste em uma organização onde o software desenvolvido é composto por vários serviços independentes e que comunicam-se através de APIs bem definidas.
