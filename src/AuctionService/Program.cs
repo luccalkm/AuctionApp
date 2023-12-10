@@ -6,10 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// LOAD ENV FILE INFO
-DotNetEnv.Env.Load(@"..\.env");
-var server = Environment.GetEnvironmentVariable("IP");
-
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AuctionDbContext>(options =>
@@ -35,10 +31,10 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(server, "/", h =>
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+            h.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
         cfg.ConfigureEndpoints(context);
     });
