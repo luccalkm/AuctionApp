@@ -30,10 +30,11 @@ builder.Services.AddMassTransit(x =>
             endpoint.ConfigureConsumer<AuctionCreatedConsumer>(context);
         });
 
-        cfg.Host(server, "/", h =>
+
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+            h.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
 
         cfg.ConfigureEndpoints(context);
@@ -47,7 +48,7 @@ app.MapControllers();
 
 try
 {
-	await DbInitializer.InitDb(app);
+    await DbInitializer.InitDb(app);
 }
 catch (Exception e)
 {
